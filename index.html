@@ -618,6 +618,10 @@
           <input id="pName" name="pName" type="text" autocomplete="name" required>
         </div>
         <div class="field">
+          <label for="cName">Child's first name</label>
+          <input id="cName" name="cName" type="text" required>
+        </div>
+        <div class="field">
           <label for="pEmail">Email</label>
           <input id="pEmail" name="pEmail" type="email" autocomplete="email" required>
         </div>
@@ -746,8 +750,10 @@
         var url = new URL(link);
         var email = (form.pEmail.value || '').trim();
         if(email){ url.searchParams.set('prefilled_email', email); }
-        var ref = ('yr' + form.pYear.value + '-' + form.pStrand.value)
-          .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 190);
+        var slugify = function(s){ return (s||'').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); };
+        var childSlug = slugify(form.cName.value).slice(0, 60);
+        var yearStrandSlug = slugify('yr' + form.pYear.value + '-' + form.pStrand.value).slice(0, 100);
+        var ref = (childSlug + '__' + yearStrandSlug).slice(0, 190);
         if(ref){ url.searchParams.set('client_reference_id', ref); }
         window.location.assign(url.toString());
         return;
